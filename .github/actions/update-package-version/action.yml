@@ -1,7 +1,7 @@
 name: update package version
 
 description: |
-  Create a commit that updates package.json's version,
+  On the default branch, create a commit that updates package.json's version,
   then tag it, and push the commit and tag.
 
 # Requirement:
@@ -39,33 +39,27 @@ runs:
 
         cd ${{ inputs.package }}
 
-        if [ -e package.json ]; then
-          cat <<< $(jq '.version = "${{ inputs.version }}"' package.json) > package.json
-          git add package.json
-          UPDATED=1
-        fi
-        if [ -e package-lock.json ]; then
-          cat <<< $(jq '.version = "${{ inputs.version }}"' package-lock.json) > package-lock.json
-          git add package-lock.json
-          UPDATED=1
-        fi
+        for file in "package.json" "package-lock.json" do
+          if [ -e $file ] && [ $(jq -r '.version' $file) != "${{ inputs.version }}" ]; then
+            cat <<< $(jq '.version = "${{ inputs.version }}"' $file) > $file
+            git add $file
+            UPDATED=1
+          fi
+        done
+
+        VERSION="${{ inputs.version }}"
+        MESSAGE="${{ inputs.commit_message_template }}"
+        TAG_NAME="${{ inputs.tag_template }}"
 
         if [ $UPDATED = 1 ]; then
-          VERSION="${{ inputs.version }}"
-          MESSAGE="${{ inputs.commit_message_template }}"
-          TAG_NAME="${{ inputs.tag_template }}"
-
           git commit -m "$MESSAGE"
+          git push origin HEAD
+        fi
 
-          if [ "${{ inputs.tag_force }}" = "true" ]; then
-            git tag  -f "$TAG_NAME"
-            git push -f origin HEAD
-            git push -f origin "$TAG_NAME"
-          else
-            git tag "$TAG_NAME"
-            git push origin HEAD
-            git push origin "$TAG_NAME"
-          fi
+        if [ "${{ inputs.tag_force }}" = "true" ]; then
+          git tag  -f "$TAG_NAME"
+          git push -f origin "$TAG_NAME"
         else
-          echo "No change to be pushed."
+          git tag  "$TAG_NAME"
+          git push origin "$TAG_NAME"
         fi
