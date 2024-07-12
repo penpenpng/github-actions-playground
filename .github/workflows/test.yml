@@ -1,0 +1,22 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org
+      - uses: .github/actions/update-package-version.yml
+        with:
+          version: "0.2.0"
+          package: packages/sample
+          commit_message_template: sample v$VERSION
+          tag_template: sample@$VERSION
+          tag_force: true

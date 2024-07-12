@@ -1,0 +1,52 @@
+name: update package version
+
+description: ""
+
+inputs:
+  version:
+    description: Version string.
+    required: true
+  package:
+    description: Path to the directory which has package.json.
+    default: "."
+  commit_message_template:
+    description: Template of commit message. You can use $VERSION as a given version string.
+    default: v$VERSION
+  tag_template:
+    description: Template of tag name. You can use $VERSION as a given version string.
+    default: v$VERSION
+  tag_force:
+    description: If true, tag will be overwritten and pushed with force option.
+    default: false
+
+runs:
+  using: composite
+  steps:
+    - name: Update version
+      run: |
+        git config user.name  actions-user
+        git config user.email action@github.com
+
+        cd ${{ inputs.package }}
+
+        if [ -e package.json ]; then
+          cat <<< $(jq '.version' = "${{ inputs.version }}" package.json) > package.json
+          git add package.json
+          UPDATED=1
+        fi
+        if [ -e package-lock.json ]; then
+          cat <<< $(jq '.version' = "${{ inputs.version }}" package-lock.json) > package-lock.json
+          git add package-lock.json
+          UPDATED=1
+        fi
+
+        if [ $UPDATED = 1 ]; then
+          VERSION=${{ inputs.version }}
+          MESSAGE=${{ inputs.commit_message_template }}
+          TAG_NAME=${{ inputs.tag_template }}
+
+          git commit -m "$MESSAGE"
+          git tag $TAGNAME
+          git push origin HEAD
+          git push origin $TAGNAME
+        fi
