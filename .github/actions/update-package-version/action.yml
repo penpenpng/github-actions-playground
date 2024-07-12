@@ -31,12 +31,12 @@ runs:
         cd ${{ inputs.package }}
 
         if [ -e package.json ]; then
-          cat <<< $(jq '.version' = "${{ inputs.version }}" package.json) > package.json
+          cat <<< $(jq '.version = "${{ inputs.version }}"' package.json) > package.json
           git add package.json
           UPDATED=1
         fi
         if [ -e package-lock.json ]; then
-          cat <<< $(jq '.version' = "${{ inputs.version }}" package-lock.json) > package-lock.json
+          cat <<< $(jq '.version = "${{ inputs.version }}"' package-lock.json) > package-lock.json
           git add package-lock.json
           UPDATED=1
         fi
