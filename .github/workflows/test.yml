@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: ${{ vars.NODE_VERSION }}
           registry-url: https://registry.npmjs.org
-      - uses: .github/actions/update-package-version.yml
+      - uses: ./.github/actions/update-package-version.yml
         with:
           version: "0.2.0"
           package: packages/sample
