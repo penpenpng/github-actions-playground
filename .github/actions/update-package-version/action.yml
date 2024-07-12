@@ -25,8 +25,8 @@ runs:
     - name: Update version
       shell: bash
       run: |
-        git config user.name  actions-user
-        git config user.email action@github.com
+        git config user.name  "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
         cd ${{ inputs.package }}
 
