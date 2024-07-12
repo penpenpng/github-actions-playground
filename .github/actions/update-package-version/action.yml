@@ -39,7 +39,7 @@ runs:
 
         cd ${{ inputs.package }}
 
-        for file in "package.json" "package-lock.json" do
+        for file in "package.json" "package-lock.json"; do
           if [ -e $file ] && [ $(jq -r '.version' $file) != "${{ inputs.version }}" ]; then
             cat <<< $(jq '.version = "${{ inputs.version }}"' $file) > $file
             git add $file
