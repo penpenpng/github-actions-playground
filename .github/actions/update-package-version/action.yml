@@ -1,6 +1,8 @@
 name: update package version
 
-description: ""
+description: |
+  Create a commit that updates package.json's version,
+  then tag it, and push the commit and tag.
 
 inputs:
   version:
@@ -16,7 +18,7 @@ inputs:
     description: Template of tag name. You can use $VERSION as a given version string.
     default: v$VERSION
   tag_force:
-    description: If true, tag will be overwritten and pushed with force option.
+    description: If true, the existing tag with the same name will be moved and pushed with force option.
     default: false
 
 runs:
@@ -50,4 +52,6 @@ runs:
           git tag "$TAG_NAME"
           git push origin HEAD
           git push origin "$TAG_NAME"
+        else
+          echo "No change to be pushed."
         fi
