@@ -47,7 +47,7 @@ runs:
           TAG_NAME="${{ inputs.tag_template }}"
 
           git commit -m "$MESSAGE"
-          git tag "$TAGNAME"
+          git tag "$TAG_NAME"
           git push origin HEAD
-          git push origin "$TAGNAME"
+          git push origin "$TAG_NAME"
         fi
