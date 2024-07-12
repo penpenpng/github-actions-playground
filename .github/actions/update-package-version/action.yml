@@ -42,12 +42,12 @@ runs:
         fi
 
         if [ $UPDATED = 1 ]; then
-          VERSION=${{ inputs.version }}
-          MESSAGE=${{ inputs.commit_message_template }}
-          TAG_NAME=${{ inputs.tag_template }}
+          VERSION="${{ inputs.version }}"
+          MESSAGE="${{ inputs.commit_message_template }}"
+          TAG_NAME="${{ inputs.tag_template }}"
 
           git commit -m "$MESSAGE"
-          git tag $TAGNAME
+          git tag "$TAGNAME"
           git push origin HEAD
-          git push origin $TAGNAME
+          git push origin "$TAGNAME"
         fi
