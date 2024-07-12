@@ -6,6 +6,8 @@ on:
 
 permissions:
   actions: write
+  checks: write
+  contents: write
 
 jobs:
   build:
