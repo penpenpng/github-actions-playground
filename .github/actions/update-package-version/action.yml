@@ -4,12 +4,12 @@ description: |
   Create a commit that updates package.json's version,
   then tag it, and push the commit and tag.
 
-  Requirement:
-    - permissions:
-        actions: write
-        checks: write
-        contents: write
-    - env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# Requirement:
+#   - permissions:
+#       actions: write
+#       checks: write
+#       contents: write
+#   - env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 inputs:
   version:
