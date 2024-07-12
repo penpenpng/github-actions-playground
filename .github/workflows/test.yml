@@ -16,3 +16,5 @@ jobs:
           commit_message_template: sample v$VERSION
           tag_template: sample@$VERSION
           tag_force: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
