@@ -4,6 +4,13 @@ description: |
   Create a commit that updates package.json's version,
   then tag it, and push the commit and tag.
 
+  Requirement:
+    - permissions:
+        actions: write
+        checks: write
+        contents: write
+    - env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 inputs:
   version:
     description: Version string.
@@ -49,9 +56,16 @@ runs:
           TAG_NAME="${{ inputs.tag_template }}"
 
           git commit -m "$MESSAGE"
-          git tag "$TAG_NAME"
-          git push origin HEAD
-          git push origin "$TAG_NAME"
+
+          if [ "${{ inputs.tag_force }}" = "true" ]; then
+            git tag  -f "$TAG_NAME"
+            git push -f origin HEAD
+            git push -f origin "$TAG_NAME"
+          else
+            git tag "$TAG_NAME"
+            git push origin HEAD
+            git push origin "$TAG_NAME"
+          fi
         else
           echo "No change to be pushed."
         fi
